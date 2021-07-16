@@ -53,21 +53,32 @@ Flutter 專案架構
 
 Hot Reload
 ---
+
 意旨不須重新啟動模擬器即可更動。
 
 VScode: 進入`lib/main.dart`按`F5`即可以執行程式
 更改程式後儲存，即可在模擬器上看到改變。
 
+Component
+---
+
+showDialog: 可以顯示Dialog。
+alertDialog: 與showDialog相似。
+fluttertoast: 彈出快速消失的視窗，必要傳入參數為msg。
+    1. pubspec.yaml->dependencies加入`fluttertoast: ^8.0.7`
+    2. main.dart `import 'package:fluttertoast/fluttertoast.dart';`
+
+
 Q&A
 ---
 
-* Q1: Normalize正規化mean std數值。
-* A1: mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)，若使用0.5會使MAGAN訓練產出模糊圖像。
-* Q2: 資料集正負比例差距過大。
-* A2: 訓練失敗，網絡會太過專注於例子較多的case。
-* Q3: 如何得到Crop_size。
-* A3: 經過測試輸出圖像，使crop center能夠刪除最多背景圖。
-* Q4: Image_siez大小如何決定。
-* A4: 根據[Pytorch finetuning](https://pytorch.org/tutorials/beginner/finetuning_torchvision_models_tutorial.html)實驗結果決定使用224。
+* Q1: 
+* A1: 
+* Q2: 
+* A2: 
+* Q3: 
+* A3: 
+* Q4: 
+* A4: 
 
 ###### tags: `Attribute discriminator` `Image classification`

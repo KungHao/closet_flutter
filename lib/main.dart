@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,30 +29,63 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  TextEditingController _textFieldController = TextEditingController();
+  String _valueText = '';
 
-  _showAlert() {
-    return showDialog(
-      context: 'context', 
-      builder: {
-        return AlertDialog(
-          title: Text("Title"),
-
-        )
-      }
-    )
+  _showToast(String _msg) {
+    Fluttertoast.showToast(
+        msg: _msg,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 2,
+        backgroundColor: Colors.black45,
+        textColor: Colors.white,
+        webBgColor: '#a0a0a0',
+        webPosition: 'center',
+        fontSize: 16.0);
   }
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  void _appBarButton() {
-    setState(() {
-      _counter += 10;
-    });
+  _showInputDialog() {
+    return showDialog<String>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Please Input an Album Name"),
+            content: TextField(
+              onChanged: (value) {
+                setState(() {
+                  _valueText = value;
+                });
+              },
+              controller: _textFieldController,
+              decoration: InputDecoration(hintText: "Input Here"),
+            ),
+            actions: <Widget>[
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 20),
+                ),
+                child: const Text('CANCEL'),
+                onPressed: () {
+                  setState(() {
+                    Navigator.of(context).pop("");
+                  });
+                },
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 20),
+                ),
+                child: const Text('OK'),
+                onPressed: () {
+                  setState(() {
+                    Navigator.of(context).pop(_valueText);
+                  });
+                },
+              ),
+            ],
+          );
+        });
   }
 
   @override
@@ -62,38 +96,19 @@ class _MyHomePageState extends State<MyHomePage> {
         centerTitle: true,
         actions: [
           IconButton(
-            tooltip: 'Add',
-            icon: Icon(
-              Icons.add,
-              color: Colors.white
-            ),
-            onPressed: _appBarButton,
-          )
+              tooltip: 'Add',
+              icon: Icon(Icons.add, color: Colors.white),
+              onPressed: () async {
+                String _albumName = await _showInputDialog();
+                if (_albumName != "") {
+                  _showToast("Create album $_albumName Succeed!");
+                }
+              })
         ],
       ),
-      body: Column(
-        children: <Widget>[
-          ListView(
-            shrinkWrap: true, // 是否根據子組件的總長度來設置
-            children: item.map((element) => Text(element)).tolist(),
-          )
-        ],
-        // child: Column(
-        //   mainAxisAlignment: MainAxisAlignment.center,
-        //   children: <Widget>[
-        //     Text('you are an ass hole!'),
-        //     Text(
-        //       'You have clicked the button this many times:',
-        //     ),
-        //     Text(
-        //       '$_counter',
-        //       style: Theme.of(context).textTheme.headline4,
-        //     ),
-        //   ],
-        // ),
-      ),
+      body: Column(),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: _showInputDialog,
         tooltip: 'Show Alert',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
