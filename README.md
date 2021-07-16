@@ -62,9 +62,9 @@ VScode: 進入`lib/main.dart`按`F5`即可以執行程式
 Component
 ---
 
-showDialog: 可以顯示Dialog。
-alertDialog: 與showDialog相似。
-fluttertoast: 彈出快速消失的視窗，必要傳入參數為msg。
+* showDialog: 可以顯示Dialog。
+* alertDialog: 與showDialog相似。
+* fluttertoast: 彈出快速消失的視窗，必要傳入參數為msg。
     1. pubspec.yaml->dependencies加入`fluttertoast: ^8.0.7`
     2. main.dart `import 'package:fluttertoast/fluttertoast.dart';`
 
