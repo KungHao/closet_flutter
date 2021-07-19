@@ -31,6 +31,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController _textFieldController = TextEditingController();
   String _valueText = '';
+  final titles = ["Album 1", "Album 2", "Album 3"];
 
   _showToast(String _msg) {
     Fluttertoast.showToast(
@@ -43,6 +44,11 @@ class _MyHomePageState extends State<MyHomePage> {
         webBgColor: '#a0a0a0',
         webPosition: 'center',
         fontSize: 16.0);
+  }
+
+  _scaffoldMessenger(content, {duration: 300}) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(content), duration: Duration(milliseconds: duration)));
   }
 
   _showInputDialog() {
@@ -88,6 +94,13 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
+  _createAlbumOnPressed(albumName) {
+    if (albumName != "") {
+      _showToast("Create album $albumName Succeed!");
+      titles.add(albumName);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,15 +113,30 @@ class _MyHomePageState extends State<MyHomePage> {
               icon: Icon(Icons.add, color: Colors.white),
               onPressed: () async {
                 String _albumName = await _showInputDialog();
-                if (_albumName != "") {
-                  _showToast("Create album $_albumName Succeed!");
-                }
+                _createAlbumOnPressed(_albumName);
               })
         ],
       ),
-      body: Column(),
+      body: ListView.builder(
+          itemCount: titles.length,
+          itemBuilder: (context, index) {
+            return Card(
+              child: ListTile(
+                onTap: () {
+                  setState(() {
+                    titles.add('Album' + (titles.length + 1).toString());
+                  });
+                  _showToast(titles[index]);
+                },
+                title: Text(titles[index]),
+              ),
+            );
+          }),
       floatingActionButton: FloatingActionButton(
-        onPressed: _showInputDialog,
+        onPressed: () async {
+          String _albumName = await _showInputDialog();
+          _createAlbumOnPressed(_albumName);
+        },
         tooltip: 'Show Alert',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
