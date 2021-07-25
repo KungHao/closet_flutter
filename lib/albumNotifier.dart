@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class AlbumPassNotifier with ChangeNotifier {
+class AlbumInfo with ChangeNotifier {
 
   // Private album title
   String _title = "" ;
 
   String get title => _title;
 
-  passTitle(String albumTitle) {
-    _title = albumTitle;
+  set albumTitle(String newTitle) {
+    _title = newTitle;
     notifyListeners();
   }
 }

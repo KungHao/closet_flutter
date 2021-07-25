@@ -21,8 +21,8 @@ class _AlbumScreen extends State<AlbumScreen> {
     return Scaffold(
       appBar: AppBar(title: Text("Album Title"), centerTitle: true),
       body: Center(
-        child: Consumer<AlbumPassNotifier>(
-          builder: (context, album, child) {
+        child: Consumer<AlbumInfo>(
+          builder: (context, album, _) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -38,19 +38,6 @@ class _AlbumScreen extends State<AlbumScreen> {
             );
           },
         ),
-        // child: Column(
-        //   mainAxisAlignment: MainAxisAlignment.center,
-        //   children: [
-        //     Text('Album Title:'),
-        //     Text('$albumTitle.albumTitle'),
-        //     ElevatedButton(
-        //       child: Text(albumTitle.toString()),
-        //       onPressed: () {
-        //         print('test button');
-        //       },
-        //     ),
-        //   ],
-        // )
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Increase Photo',

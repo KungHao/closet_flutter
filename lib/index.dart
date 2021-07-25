@@ -14,7 +14,6 @@ class IndexPage extends StatefulWidget {
 
 class _IndexPage extends State<IndexPage> {
   TextEditingController _textFieldController = TextEditingController();
-  String _valueText = '';
   final titles = ["Album 1", "Album 2", "Album 3"];
 
   _showInputDialog(context) async {
@@ -24,9 +23,6 @@ class _IndexPage extends State<IndexPage> {
           return AlertDialog(
             title: Text("Please Input an Album Name"),
             content: TextField(
-              onChanged: (value) {
-                _valueText = value;
-              },
               controller: _textFieldController,
               decoration: InputDecoration(hintText: "Input here"),
             ),
@@ -47,8 +43,8 @@ class _IndexPage extends State<IndexPage> {
                 ),
                 child: const Text('OK'),
                 onPressed: () {
+                  Navigator.of(context).pop(_textFieldController.text);
                   _textFieldController.clear(); // clear textfield
-                  Navigator.of(context).pop(_valueText);
                 },
               ),
             ],
@@ -67,7 +63,7 @@ class _IndexPage extends State<IndexPage> {
 
   @override
   Widget build(BuildContext context) {
-    final album = Provider.of<AlbumPassNotifier>(context);
+    final album = Provider.of<AlbumInfo>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -91,7 +87,7 @@ class _IndexPage extends State<IndexPage> {
                 onTap: () {
                   // showToast(titles[index]);
                   // route to album titles[index]
-                  album.passTitle(titles[index]);
+                  album.albumTitle = titles[index];
                   Navigator.of(context).push(
                       MaterialPageRoute(builder: (context) => AlbumScreen()));
                 },
@@ -106,7 +102,7 @@ class _IndexPage extends State<IndexPage> {
         },
         tooltip: 'Show Alert',
         child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }

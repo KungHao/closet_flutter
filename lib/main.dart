@@ -20,7 +20,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<AlbumPassNotifier>(create: (context) => AlbumPassNotifier())
+        ChangeNotifierProvider<AlbumInfo>(create: (context) => AlbumInfo())
         ],
       child: 
         MaterialApp(
