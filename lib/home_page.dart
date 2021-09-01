@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './utils.dart';
 
-import 'package:closet_flutter/album.dart';
+import 'package:closet_flutter/album_page.dart';
 import 'package:closet_flutter/albumNotifier.dart';
 
 class IndexPage extends StatefulWidget {
@@ -89,7 +89,7 @@ class _IndexPage extends State<IndexPage> {
                   // route to album titles[index]
                   album.albumTitle = titles[index];
                   Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => AlbumScreen()));
+                      MaterialPageRoute(builder: (context) => AlbumPage()));
                 },
                 title: Text(titles[index]),
               ),
