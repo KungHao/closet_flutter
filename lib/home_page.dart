@@ -58,7 +58,6 @@ class _IndexPage extends State<IndexPage> {
     setState(() {
       if (albumName != "user_press_cancel_btn") {
         AlbumDB.instance.insert();
-        AlbumDB.instance.query();
         showToast("Create album $albumName Succeed!");
         titles.add(albumName);
       }
