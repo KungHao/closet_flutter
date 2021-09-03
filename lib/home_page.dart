@@ -5,6 +5,8 @@ import './utils.dart';
 import 'package:closet_flutter/album_page.dart';
 import 'package:closet_flutter/albumNotifier.dart';
 
+import 'database/album_db.dart';
+
 class IndexPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -55,6 +57,8 @@ class _IndexPage extends State<IndexPage> {
   _createAlbumOnPressed(albumName) {
     setState(() {
       if (albumName != "user_press_cancel_btn") {
+        AlbumDB.instance.insert();
+        AlbumDB.instance.query();
         showToast("Create album $albumName Succeed!");
         titles.add(albumName);
       }

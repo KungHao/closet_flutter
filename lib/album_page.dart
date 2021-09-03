@@ -98,20 +98,31 @@ class _AlbumPage extends State<AlbumPage> {
                             ),
                             itemBuilder: (context, index) {
                               return RawMaterialButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => ImagePage(
-                                                imagePath: _images[index])));
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        image: DecorationImage(
-                                            image: AssetImage(_images[index]),
-                                            fit: BoxFit.cover)),
-                                  ));
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ImagePage(
+                                              imagePath: _images[index])));
+                                },
+                                // child: Container(
+                                //   decoration: BoxDecoration(
+                                //       borderRadius: BorderRadius.circular(15),
+                                //       image: DecorationImage(
+                                //           image: AssetImage(_images[index]),
+                                //           fit: BoxFit.cover)),
+                                // )
+                                child: Hero(
+                                    tag: 'image$index',
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          image: DecorationImage(
+                                              image: AssetImage(_images[index]),
+                                              fit: BoxFit.cover)),
+                                    )),
+                              );
                             },
                             itemCount: _images.length)))
               ],
