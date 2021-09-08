@@ -1,7 +1,9 @@
+import 'package:closet_flutter/Utility.dart';
 import 'package:closet_flutter/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:closet_flutter/albumNotifier.dart';
 
@@ -35,6 +37,24 @@ List<String> _images = [
 
 class _AlbumPage extends State<AlbumPage> {
   String albumName = "";
+  
+  // refreshImages() {
+  //   dbHelper.getPhotos().then((imgs) {
+  //     setState(() {
+  //       images.clear();
+  //       images.addAll(imgs);
+  //     });
+  //   });
+  // }
+
+  // _pickImageFromGallery() {
+  //   ImagePicker.pickImage(source: ImageSource.gallery).then((imgFile) {
+  //     String imgString = Utility.base64String(imgFile.readAsBytesSync());
+  //     Photo photo = Photo(0, imgString);
+  //     dbHelper.save(photo);
+  //     refreshImages();
+  //   });
+  // }
 
   _showDialog(context) async {
     return showDialog(
@@ -50,7 +70,7 @@ class _AlbumPage extends State<AlbumPage> {
                   icon: Icon(Icons.camera_alt)),
               IconButton(
                   onPressed: () {
-                    showToast("fuck");
+                    // pickImageFromGallery()
                   },
                   icon: Icon(Icons.album_rounded))
             ],

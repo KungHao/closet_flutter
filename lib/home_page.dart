@@ -16,7 +16,23 @@ class IndexPage extends StatefulWidget {
 
 class _IndexPage extends State<IndexPage> {
   TextEditingController _textFieldController = TextEditingController();
-  final titles = ["Album 1", "Album 2", "Album 3"];
+  List<String> albums = [];
+  
+  getAlbumList() {
+    AlbumDB.instance.query().then((_albums) {
+      setState(() {
+        albums = _albums;
+        print('Albums:$albums');
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getAlbumList();
+  }
+
 
   _showInputDialog(context) async {
     return showDialog<String>(
@@ -54,20 +70,25 @@ class _IndexPage extends State<IndexPage> {
         });
   }
 
-  _createAlbumOnPressed(albumName) {
-    setState(() {
-      if (albumName != "user_press_cancel_btn") {
-        AlbumDB.instance.insert();
-        showToast("Create album $albumName Succeed!");
-        titles.add(albumName);
-      }
-    });
+  _createAlbumOnPressed(_albumName) {
+    // setState(() {
+    //   if (albumName != "user_press_cancel_btn") {
+    //     AlbumDB.instance.insert('testAlbum');
+    //     showToast("Create album $albumName Succeed!");
+    //     // titles.add(albumName);
+    //   }
+    // });
+    if (_albumName != "user_press_cancel_btn") {
+      AlbumDB.instance.insert(_albumName);
+      showToast("Create album $_albumName Succeed!");
+      getAlbumList();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final album = Provider.of<AlbumInfo>(context);
-
+    
     return Scaffold(
       appBar: AppBar(
         title: Text("Closet"),
@@ -83,18 +104,18 @@ class _IndexPage extends State<IndexPage> {
         // ],
       ),
       body: ListView.builder(
-          itemCount: titles.length,
+          itemCount: albums.length,
           itemBuilder: (context, index) {
             return Card(
               child: ListTile(
                 onTap: () {
                   // showToast(titles[index]);
                   // route to album titles[index]
-                  album.albumTitle = titles[index];
+                  album.albumTitle = albums[index];
                   Navigator.of(context).push(
                       MaterialPageRoute(builder: (context) => AlbumPage()));
                 },
-                title: Text(titles[index]),
+                title: Text(albums[index]),
               ),
             );
           }),

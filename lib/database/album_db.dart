@@ -10,8 +10,8 @@ class AlbumDB {
   static final AlbumDB instance = AlbumDB._privateConstructor();
 
   // insert data
-  void insert() async {
-    var album = Album(id: 1, albumName: 'T-shirt', imageId: 11);
+  void insert(String _albumName) async {
+    Album album = Album(albumName: _albumName);
 
     dbHelper.insert(album.toMap());
 
@@ -19,12 +19,19 @@ class AlbumDB {
   }
 
   // query data
-  void query() async {
-    final rows = await dbHelper.queryAll();
-    print('result:');
-    rows.forEach((element) {
-      print(element);
+  Future<List<String>> query() async {
+    List<String> res = [];
+    await dbHelper.queryAll().then((value) {
+      value.forEach((element) {
+        res.add(element['albumName']);
+      });
     });
-    print('end of query');
+    return res;
+    // print('result:');
+    // rows.forEach((element) {
+    //   print(element);
+    // });
+    // print('end of query');
+
   }
 }
