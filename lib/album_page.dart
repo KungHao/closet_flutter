@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:closet_flutter/Utility.dart';
+import 'package:closet_flutter/database/photo_db.dart';
 import 'package:closet_flutter/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,55 +10,82 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:closet_flutter/albumNotifier.dart';
 
+import 'database/data/photo.dart';
 import 'image_page.dart';
 
 class AlbumPage extends StatefulWidget {
+  final AlbumInfo albumInfo;
+  AlbumPage({required this.albumInfo});
+
   @override
   State<StatefulWidget> createState() {
-    return _AlbumPage();
+    return _AlbumPage(albumInfo: albumInfo);
   }
 }
 
-List<String> _images = [
-  'images/1.jpg',
-  'images/2.jpg',
-  'images/3.jpg',
-  'images/4.jpg',
-  'images/5.jpg',
-  'images/6.jpg',
-  'images/7.jpg',
-  'images/8.jpg',
-  'images/9.jpg',
-  'images/10.jpg',
-  'images/11.jpg',
-  'images/12.jpg',
-  'images/13.jpg',
-  'images/14.jpg',
-  'images/15.jpg',
-  'images/16.jpg',
-];
+
+// List<String> photos = [
+//   'images/1.jpg',
+//   'images/2.jpg',
+//   'images/3.jpg',
+//   'images/4.jpg',
+//   'images/5.jpg',
+//   'images/6.jpg',
+//   'images/7.jpg',
+//   'images/8.jpg',
+//   'images/9.jpg',
+//   'images/10.jpg',
+//   'images/11.jpg',
+//   'images/12.jpg',
+//   'images/13.jpg',
+//   'images/14.jpg',
+//   'images/15.jpg',
+//   'images/16.jpg',
+// ];
 
 class _AlbumPage extends State<AlbumPage> {
-  String albumName = "";
+  final AlbumInfo albumInfo;
+  _AlbumPage({required this.albumInfo});
+  List<Photo> photos = [];
   
-  // refreshImages() {
-  //   dbHelper.getPhotos().then((imgs) {
-  //     setState(() {
-  //       images.clear();
-  //       images.addAll(imgs);
-  //     });
-  //   });
-  // }
+  getPhotoList() {
+    PhotoDB.instance.queryPhoto(albumInfo.albumName).then((_photos) {
+      setState(() {
+        photos = _photos;
+        print('Photos:$photos');
+      });
+    });
+  }
 
-  // _pickImageFromGallery() {
-  //   ImagePicker.pickImage(source: ImageSource.gallery).then((imgFile) {
-  //     String imgString = Utility.base64String(imgFile.readAsBytesSync());
-  //     Photo photo = Photo(0, imgString);
-  //     dbHelper.save(photo);
-  //     refreshImages();
-  //   });
-  // }
+  @override
+  void initState() {
+    super.initState();
+    getPhotoList();
+  }
 
+  _openGallery() {
+    ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 50).then((imgFile) async {
+        String imgStr = Utility.base64String(await imgFile!.readAsBytes());
+        PhotoDB.instance.addPhoto(albumInfo.albumName, imgStr);
+        getPhotoList();
+      });
+    Navigator.of(context).pop();
+  }
+
+  _openCamera() {
+    ImagePicker().pickImage(
+      source: ImageSource.camera,
+      imageQuality: 50).then((imgFile) async {
+        String imgString = Utility.base64String(await imgFile!.readAsBytes());
+        print(imgString);
+        print(Utility.imageFromBase64String(imgString));
+        PhotoDB.instance.addPhoto(albumInfo.albumName, imgString);
+      });
+    Navigator.of(context).pop();
+  }
+  
   _showDialog(context) async {
     return showDialog(
         context: context,
@@ -65,12 +95,14 @@ class _AlbumPage extends State<AlbumPage> {
             actions: [
               IconButton(
                   onPressed: () {
-                    showToast("shit");
+                    print('open camera');
+                    _openCamera();
                   },
                   icon: Icon(Icons.camera_alt)),
               IconButton(
                   onPressed: () {
-                    // pickImageFromGallery()
+                    print('open gallery');
+                    _openGallery();
                   },
                   icon: Icon(Icons.album_rounded))
             ],
@@ -80,24 +112,26 @@ class _AlbumPage extends State<AlbumPage> {
 
   @override
   Widget build(BuildContext context) {
-    // final albumTitle = Provider.of<AlbumPassNotifier>(context, listen: false);
+    // final albumInfo = Provider.of<AlbumInfo>(context, listen: false);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Album Title"), centerTitle: true),
+      appBar: AppBar(title: Text(albumInfo.albumName), centerTitle: true, actions: [
+          IconButton(
+              tooltip: 'Refresh',
+              icon: Icon(Icons.lock, color: Colors.black),
+              onPressed: () async {
+                // String _albumName = await _inputDialog(context);
+                // _addAlbum(_albumName);
+                showToast('Refresh');
+                getPhotoList();
+              })
+        ]),
       body: Center(
         child: Consumer<AlbumInfo>(
           builder: (context, album, _) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Text('Album Title:'),
-                // Text('${album.title}'),
-                // ElevatedButton(
-                //   child: Text(album.title),
-                //   onPressed: () {
-                //     print('test button');
-                //   },
-                // ),
                 Expanded(
                     child: Container(
                         padding:
@@ -112,7 +146,7 @@ class _AlbumPage extends State<AlbumPage> {
                         child: GridView.builder(
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
+                              crossAxisCount: 3, //每行x列
                               crossAxisSpacing: 10,
                               mainAxisSpacing: 10,
                             ),
@@ -123,28 +157,26 @@ class _AlbumPage extends State<AlbumPage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => ImagePage(
-                                              imagePath: _images[index])));
+                                              photo: photos[index])));
                                 },
-                                // child: Container(
-                                //   decoration: BoxDecoration(
-                                //       borderRadius: BorderRadius.circular(15),
-                                //       image: DecorationImage(
-                                //           image: AssetImage(_images[index]),
-                                //           fit: BoxFit.cover)),
-                                // )
+                                onLongPress: () {
+                                  print('delete photo');
+                                },
                                 child: Hero(
-                                    tag: 'image$index',
+                                    tag: '${photos[index].id}',
                                     child: Container(
                                       decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          image: DecorationImage(
-                                              image: AssetImage(_images[index]),
-                                              fit: BoxFit.cover)),
-                                    )),
+                                        borderRadius: BorderRadius.circular(15),
+                                        image: DecorationImage(
+                                          // image: AssetImage(photos[index].photoName!),
+                                          image: MemoryImage(Utility.dataFromBase64String(photos[index].photo!)),
+                                          fit: BoxFit.cover
+                                        )
+                                      )
+                                ))
                               );
                             },
-                            itemCount: _images.length)))
+                            itemCount: photos.length)))
               ],
             );
           },

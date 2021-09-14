@@ -1,6 +1,6 @@
 class Album {
   int? id;
-  String albumName;
+  String? albumName;
 
   Album({this.id, required this.albumName});
 
@@ -8,9 +8,8 @@ class Album {
     return {'id': id, 'albumName': albumName};
   }
 
-  void fromMap(Map<String, dynamic> map) {
+  Album.fromMap(Map<String, dynamic> map) {
     id = map['id'];
     albumName = map['albumName'];
   }
-
 }

@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 class AlbumInfo with ChangeNotifier {
 
   // Private album title
-  String _title = "" ;
+  String _albumName = "" ;
 
-  String get title => _title;
+  String get albumName => _albumName;
 
-  set albumTitle(String newTitle) {
-    _title = newTitle;
+  set albumName(String newName) {
+    _albumName = newName;
     notifyListeners();
   }
 }
